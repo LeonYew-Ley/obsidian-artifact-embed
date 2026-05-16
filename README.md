@@ -8,6 +8,10 @@
   <img alt="Status" src="https://img.shields.io/badge/status-alpha-orange.svg">
 </p>
 
+<p align="center">
+  <b>English</b> · <a href="README.zh.md">中文</a>
+</p>
+
 **Artifact Embed** lets you drop interactive HTML — local files, remote URLs, or inline source — straight into your Obsidian notes as Claude-Desktop-style cards. Each artifact runs in a sandboxed iframe, inherits your Obsidian theme variables, and gives you a tiny toolbar to reload, open externally, or copy the source.
 
 ## Why?
@@ -87,6 +91,56 @@ If the **first line** of the code block matches `key=value` syntax (and contains
 height=600 title="Big chart"
 <svg>…</svg>
 ```
+
+## Generating compatible HTML with Claude
+
+Claude (and other Anthropic-flavored artifact generators) defaults to its own CSS token system — `--color-background-primary`, `--color-text-primary`, `--font-sans`, `--border-radius-lg`, etc. None of those variables exist in Obsidian, so the artifact renders with no background, no border, and fallback fonts.
+
+To get HTML that inherits your current Obsidian theme, paste this prompt at the start of the conversation (or save it as a Claude project's system prompt):
+
+> Generate HTML for an Obsidian Artifact Embed iframe. Follow these rules so the result inherits the user's theme:
+>
+> 1. **Use Obsidian's native CSS variables**, not Anthropic-style tokens:
+>    - background: `--background-primary`, `--background-secondary`, `--background-modifier-hover`, `--background-modifier-border`
+>    - text: `--text-normal`, `--text-muted`, `--text-faint`, `--text-accent`, `--text-error`
+>    - font: `--font-text`, `--font-interface`, `--font-monospace`
+>    - radius: `--radius-s`, `--radius-m`, `--radius-l`
+>    - Do **not** use `--color-background-*`, `--color-text-*`, `--color-border-*`, `--font-sans`, `--font-mono`, `--border-radius-*`, or any other Anthropic-prefixed token.
+> 2. Do **not** hardcode light-only or dark-only background/text colors. If brand colors are needed, scope dark variants under `@media (prefers-color-scheme: dark)`.
+> 3. Inline all CSS and JavaScript — the iframe is sandboxed without same-origin access, so external stylesheets, web fonts, `localStorage`, and `window.parent` are unavailable.
+> 4. Keep the document self-contained: no `<link>` to CDNs, no external icon fonts, no `<head>` is required.
+> 5. Return the HTML as a single fenced code block so it can be pasted directly into an ```` ```artifact ```` fence.
+
+Minimal skeleton Claude should output:
+
+```html
+<style>
+  .card {
+    background: var(--background-primary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-m);
+    padding: 1rem;
+    font-family: var(--font-text);
+  }
+  .card code {
+    font-family: var(--font-monospace);
+    background: var(--background-secondary);
+    padding: 1px 6px;
+    border-radius: var(--radius-s);
+  }
+</style>
+<div class="card">…</div>
+```
+
+### Workflow
+
+1. Start a Claude conversation with the prompt block above (or attach it as a project system prompt).
+2. Ask Claude to build whatever widget you want — cheatsheet, calculator, chart, mini-tool.
+3. Copy the returned HTML into your note inside a `` ```artifact `` fence, or save it as `Assets/whatever.html` and reference it with `` ```artifact\nAssets/whatever.html\n``  ``.
+4. Reload the note; the artifact now follows your Obsidian theme (light/dark, custom snippets, font overrides).
+
+> Already have an existing Claude artifact using `--color-*` tokens? Either re-prompt Claude with the rules above to regenerate, or do a quick find-and-replace mapping (`--color-background-primary` → `--background-primary`, `--color-text-primary` → `--text-normal`, `--font-sans` → `--font-text`, `--border-radius-lg` → `--radius-l`, etc.).
 
 ## Install
 
