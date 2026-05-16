@@ -1,0 +1,107 @@
+/* ============================================================
+   Artifact Embed — card chrome
+   ============================================================ */
+
+.artifact-card {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m, 8px);
+  background: var(--background-primary);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.artifact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 10px;
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.artifact-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-monospace, monospace);
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.artifact-title-icon {
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.artifact-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.artifact-action-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-s, 4px);
+  padding: 4px 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.12s, color 0.12s;
+  box-shadow: none;
+}
+
+.artifact-action-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.artifact-action-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.artifact-body {
+  position: relative;
+  background: var(--background-primary);
+}
+
+.artifact-iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+}
+
+.artifact-error {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-error);
+  background: var(--background-secondary);
+}
+
+/* Live Preview / source-mode placeholder for ![[file.html]] */
+.artifact-edit-placeholder {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-family: var(--font-monospace, monospace);
+  font-size: 0.85em;
+}

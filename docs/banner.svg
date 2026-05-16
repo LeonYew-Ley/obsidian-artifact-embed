@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="Artifact Embed — Claude-style HTML artifacts inside Obsidian notes">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1530"/>
+      <stop offset="60%" stop-color="#231a3d"/>
+      <stop offset="100%" stop-color="#2c2148"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e2d8ff"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f6906a"/>
+      <stop offset="100%" stop-color="#d77757"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1.2" cy="1.2" r="1.2" fill="#7e6bb8" opacity="0.10"/>
+    </pattern>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="20" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="360" fill="url(#bg)"/>
+  <rect width="1280" height="360" fill="url(#dots)"/>
+
+  <!-- subtle hero glow -->
+  <circle cx="180" cy="120" r="220" fill="#7956d3" opacity="0.12"/>
+  <circle cx="1080" cy="280" r="260" fill="#f6906a" opacity="0.07"/>
+
+  <!-- left: title block -->
+  <g transform="translate(80,90)">
+    <!-- pill / category chip -->
+    <g>
+      <rect x="0" y="0" rx="999" ry="999" width="158" height="28" fill="#3a2a5e" stroke="#5b48a8" stroke-width="1"/>
+      <text x="79" y="19" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" font-weight="600" fill="#c9b8ff" text-anchor="middle" letter-spacing="0.04em">OBSIDIAN · PLUGIN</text>
+    </g>
+
+    <!-- title -->
+    <text x="0" y="100" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="url(#title)" letter-spacing="-0.02em">Artifact Embed</text>
+
+    <!-- accent underline -->
+    <rect x="0" y="116" width="92" height="4" rx="2" fill="url(#accent)"/>
+
+    <!-- subtitle -->
+    <text x="0" y="168" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#bdb1d8" letter-spacing="0.005em">Claude-style interactive HTML cards, embedded</text>
+    <text x="0" y="194" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#bdb1d8" letter-spacing="0.005em">right inside your Obsidian notes.</text>
+  </g>
+
+  <!-- right: mock artifact card -->
+  <g transform="translate(760,68)" filter="url(#cardShadow)">
+    <!-- card body -->
+    <rect x="0" y="0" rx="14" ry="14" width="440" height="226" fill="#f7f4ef" stroke="#dcd3c4" stroke-width="1"/>
+    <!-- card header -->
+    <rect x="0" y="0" rx="14" ry="14" width="440" height="46" fill="#efe7da"/>
+    <rect x="0" y="32" width="440" height="14" fill="#efe7da"/>
+    <!-- toolbar buttons -->
+    <circle cx="20" cy="23" r="5" fill="#f6906a"/>
+    <circle cx="38" cy="23" r="5" fill="#ddc488"/>
+    <circle cx="56" cy="23" r="5" fill="#9ec99c"/>
+    <text x="80" y="28" font-family="ui-monospace, SFMono-Regular, 'Cascadia Mono', monospace" font-size="13" fill="#7d6f55">artifact · cheatsheet.html</text>
+    <!-- tool icons (refresh/external/copy) -->
+    <g stroke="#9b8c70" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(360,15)">
+      <g><path d="M0 8a8 8 0 1 1 2 5.5"/><polyline points="0,3 0,8 5,8"/></g>
+      <g transform="translate(28,0)"><rect x="0" y="2" width="12" height="12" rx="2"/><path d="M3 5v-2h2"/></g>
+      <g transform="translate(56,0)"><rect x="2" y="2" width="11" height="11" rx="2"/><path d="M0 11v-9h9"/></g>
+    </g>
+
+    <!-- content placeholder: code + chart -->
+    <g transform="translate(20,68)">
+      <rect width="180" height="14" rx="4" fill="#e3d9c5"/>
+      <rect y="22" width="220" height="14" rx="4" fill="#e3d9c5"/>
+      <rect y="44" width="140" height="14" rx="4" fill="#e3d9c5"/>
+      <rect y="76" width="80" height="22" rx="5" fill="#f6906a"/>
+      <text x="40" y="91" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#ffffff" text-anchor="middle">Try it</text>
+    </g>
+    <!-- decorative tab pills -->
+    <g transform="translate(220,68)">
+      <rect width="200" height="140" rx="10" fill="#ffffff" stroke="#e1d6c1"/>
+      <polyline points="20,110 60,80 100,95 140,55 180,70" fill="none" stroke="#f6906a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="20"  cy="110" r="3" fill="#f6906a"/>
+      <circle cx="60"  cy="80"  r="3" fill="#f6906a"/>
+      <circle cx="100" cy="95"  r="3" fill="#f6906a"/>
+      <circle cx="140" cy="55"  r="3" fill="#f6906a"/>
+      <circle cx="180" cy="70"  r="3" fill="#f6906a"/>
+      <line x1="20" y1="125" x2="180" y2="125" stroke="#e6dcc7" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- bottom-left: tagline strip -->
+  <g transform="translate(80,300)">
+    <text x="0" y="0" font-family="ui-monospace, SFMono-Regular, 'Cascadia Mono', monospace" font-size="14" fill="#8c7eb4">```artifact</text>
+    <text x="86" y="0" font-family="ui-monospace, SFMono-Regular, 'Cascadia Mono', monospace" font-size="14" fill="#bdb1d8">  →  file · url · inline HTML  ·  sandboxed iframe  ·  theme-aware</text>
+  </g>
+</svg>

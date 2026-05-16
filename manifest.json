@@ -1,0 +1,9 @@
+{
+  "id": "obsidian-artifact-embed",
+  "name": "Artifact Embed",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "Embed interactive HTML files, URLs, or inline HTML as Claude-style sandboxed artifact cards inside notes.",
+  "author": "learngeniuszz",
+  "isDesktopOnly": false
+}

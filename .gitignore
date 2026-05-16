@@ -1,0 +1,15 @@
+# dependencies (reserved for a future TS migration; not used in v0.1)
+node_modules/
+
+# build output
+dist/
+build/
+
+# editor & OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Obsidian-side per-vault data (would leak vault state if accidentally committed)
+data.json
