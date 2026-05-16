@@ -92,7 +92,7 @@ height=600 title="Big chart"
 
 This plugin isn't in the community plugin browser yet. To install from source:
 
-1. Download `manifest.json`, `main.js`, and `styles.css` from the latest [release](https://github.com/LeonYew/obsidian-artifact-embed/releases) (or clone this repo)
+1. Download `manifest.json`, `main.js`, and `styles.css` from the latest [release](https://github.com/LeonYew-Ley/obsidian-artifact-embed/releases) (or clone this repo)
 2. Drop them into `<your-vault>/.obsidian/plugins/obsidian-artifact-embed/`
 3. Reload Obsidian (`Ctrl+P` → *Reload app without saving*)
 4. Open *Settings → Community plugins*, enable **Artifact Embed**
@@ -130,4 +130,4 @@ The banner is hand-written SVG (`docs/banner.svg`) — no external tooling neede
 
 ## License
 
-[MIT](LICENSE) © LeonYew
+[MIT](LICENSE) © LeonYew-Ley
