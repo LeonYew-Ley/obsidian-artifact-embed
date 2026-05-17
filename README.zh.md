@@ -96,22 +96,15 @@ height=600 title="Big chart"
 
 Claude（以及其他走 Anthropic artifact 风格的生成器）默认用自家那套 CSS token —— `--color-background-primary`、`--color-text-primary`、`--font-sans`、`--border-radius-lg` 等等。Obsidian 里并没有这些变量，所以 artifact 会渲染成无背景、无边框、字体也回退到浏览器默认值。
 
-要想让 Claude 生成的 HTML 直接继承你当前的 Obsidian 主题，把下面这段提示词放在对话最开始（或者保存为 Claude 项目的 system prompt）：
+为了让 Claude 稳定输出主题感知的 HTML，完整的规则集被打包成了一个可复用的 **Skill**，放在 [`skills/artifact-embed/SKILL.md`](skills/artifact-embed/SKILL.md)。Skill 覆盖了 Obsidian 原生变量映射、sandbox 约束、输出格式，以及把已有 Anthropic 风格 artifact 迁移过来的查找替换表。
 
-> 请生成用于 Obsidian Artifact Embed 插件 iframe 的 HTML，遵守以下规则以确保渲染时跟随用户主题：
->
-> 1. **使用 Obsidian 原生 CSS 变量**，不要使用 Anthropic 风格的 token：
->    - 背景：`--background-primary`、`--background-secondary`、`--background-modifier-hover`、`--background-modifier-border`
->    - 文字：`--text-normal`、`--text-muted`、`--text-faint`、`--text-accent`、`--text-error`
->    - 字体：`--font-text`、`--font-interface`、`--font-monospace`
->    - 圆角：`--radius-s`、`--radius-m`、`--radius-l`
->    - **不要**使用 `--color-background-*`、`--color-text-*`、`--color-border-*`、`--font-sans`、`--font-mono`、`--border-radius-*`，以及任何其他 Anthropic 前缀的 token。
-> 2. **不要硬编码**只适用于亮色或暗色的背景/文字颜色。如果一定要用品牌色，把暗色变体包在 `@media (prefers-color-scheme: dark)` 里。
-> 3. CSS 和 JavaScript 全部内联。iframe 是 sandbox 化的且没有 same-origin，所以外部样式表、Web 字体、`localStorage`、`window.parent` 都无法访问。
-> 4. HTML 必须自包含：不要 `<link>` 引用 CDN、不要引用外部图标字体，也不需要 `<head>`。
-> 5. 把生成结果作为单个 fenced code block 返回，方便直接粘贴进 ```` ```artifact ```` 块里。
+### 怎么使用这个 Skill
 
-Claude 输出的最小骨架应该长这样：
+- **Claude Code / Claude Agent SDK** —— 把 `skills/artifact-embed/` 目录放进你的项目，或者软链到 `~/.claude/skills/artifact-embed/`。之后只要你提出 Obsidian artifact 相关的需求，Claude 会自动调用它。
+- **claude.ai 网页版 / Claude Desktop** —— 打开 `SKILL.md`，复制正文，粘贴成新建项目或对话的 system prompt（或第一条消息）。
+- **其他 LLM** —— 文件是纯 Markdown，直接作为 system prompt 喂给 ChatGPT、Gemini 或任何你用来生成 HTML 的工具。
+
+Skill 引导 Claude 输出的最小骨架长这样：
 
 ```html
 <style>
@@ -135,12 +128,12 @@ Claude 输出的最小骨架应该长这样：
 
 ### 工作流
 
-1. 开一段新的 Claude 对话，把上面那段提示词放在最前面（或者挂到 Claude 项目的 system prompt 里）。
+1. 把 Skill 装进你的 Claude 环境（上面三种方式任选其一）。
 2. 让 Claude 帮你生成想要的小工具 —— 速查表、计算器、图表、小工具皆可。
 3. 把返回的 HTML 复制进笔记，包在 `` ```artifact `` 块里；或者另存为 `Assets/xxx.html`，然后用 `` ```artifact\nAssets/xxx.html\n`` `` 引用。
 4. 重新加载笔记，artifact 就会跟着你当前的 Obsidian 主题（亮/暗、自定义 snippet、字体覆盖）走。
 
-> 已经有用 `--color-*` token 写好的 Claude artifact？两条路：要么把上面那段规则交给 Claude 让它重新生成；要么手动做一次查找替换映射（`--color-background-primary` → `--background-primary`、`--color-text-primary` → `--text-normal`、`--font-sans` → `--font-text`、`--border-radius-lg` → `--radius-l` 等等）。
+> 已经有用 `--color-*` token 写好的 Claude artifact？两条路：要么把它再丢给 Skill 重新生成；要么照着 [Skill 里的迁移映射表](skills/artifact-embed/SKILL.md#migrating-an-existing-anthropic-style-artifact)手动做一次查找替换。
 
 ## 安装
 

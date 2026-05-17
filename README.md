@@ -96,22 +96,15 @@ height=600 title="Big chart"
 
 Claude (and other Anthropic-flavored artifact generators) defaults to its own CSS token system — `--color-background-primary`, `--color-text-primary`, `--font-sans`, `--border-radius-lg`, etc. None of those variables exist in Obsidian, so the artifact renders with no background, no border, and fallback fonts.
 
-To get HTML that inherits your current Obsidian theme, paste this prompt at the start of the conversation (or save it as a Claude project's system prompt):
+To make Claude reliably emit theme-aware HTML for this plugin, the full rule set is packaged as a reusable **Skill** at [`skills/artifact-embed/SKILL.md`](skills/artifact-embed/SKILL.md). The Skill covers Obsidian-native variable mapping, sandbox constraints, output format, and a migration table for existing Anthropic-style artifacts.
 
-> Generate HTML for an Obsidian Artifact Embed iframe. Follow these rules so the result inherits the user's theme:
->
-> 1. **Use Obsidian's native CSS variables**, not Anthropic-style tokens:
->    - background: `--background-primary`, `--background-secondary`, `--background-modifier-hover`, `--background-modifier-border`
->    - text: `--text-normal`, `--text-muted`, `--text-faint`, `--text-accent`, `--text-error`
->    - font: `--font-text`, `--font-interface`, `--font-monospace`
->    - radius: `--radius-s`, `--radius-m`, `--radius-l`
->    - Do **not** use `--color-background-*`, `--color-text-*`, `--color-border-*`, `--font-sans`, `--font-mono`, `--border-radius-*`, or any other Anthropic-prefixed token.
-> 2. Do **not** hardcode light-only or dark-only background/text colors. If brand colors are needed, scope dark variants under `@media (prefers-color-scheme: dark)`.
-> 3. Inline all CSS and JavaScript — the iframe is sandboxed without same-origin access, so external stylesheets, web fonts, `localStorage`, and `window.parent` are unavailable.
-> 4. Keep the document self-contained: no `<link>` to CDNs, no external icon fonts, no `<head>` is required.
-> 5. Return the HTML as a single fenced code block so it can be pasted directly into an ```` ```artifact ```` fence.
+### How to use the Skill
 
-Minimal skeleton Claude should output:
+- **Claude Code / Claude Agent SDK** — drop the `skills/artifact-embed/` directory into your project (or symlink it into `~/.claude/skills/artifact-embed/`). Claude will auto-invoke it whenever you ask for an Obsidian artifact widget.
+- **claude.ai web / Claude Desktop** — open `SKILL.md`, copy its body, and paste it as the system prompt (or the first message) of a new project or conversation.
+- **Other LLMs** — the file is plain Markdown; paste it as a system prompt to ChatGPT, Gemini, or any tool you use to generate HTML.
+
+Minimal skeleton the Skill produces:
 
 ```html
 <style>
@@ -135,12 +128,12 @@ Minimal skeleton Claude should output:
 
 ### Workflow
 
-1. Start a Claude conversation with the prompt block above (or attach it as a project system prompt).
+1. Load the Skill into your Claude environment (see the three options above).
 2. Ask Claude to build whatever widget you want — cheatsheet, calculator, chart, mini-tool.
 3. Copy the returned HTML into your note inside a `` ```artifact `` fence, or save it as `Assets/whatever.html` and reference it with `` ```artifact\nAssets/whatever.html\n``  ``.
 4. Reload the note; the artifact now follows your Obsidian theme (light/dark, custom snippets, font overrides).
 
-> Already have an existing Claude artifact using `--color-*` tokens? Either re-prompt Claude with the rules above to regenerate, or do a quick find-and-replace mapping (`--color-background-primary` → `--background-primary`, `--color-text-primary` → `--text-normal`, `--font-sans` → `--font-text`, `--border-radius-lg` → `--radius-l`, etc.).
+> Already have an existing Claude artifact using `--color-*` tokens? Either re-run it through the Skill to regenerate, or apply the find-and-replace mapping in [the Skill's migration table](skills/artifact-embed/SKILL.md#migrating-an-existing-anthropic-style-artifact).
 
 ## Install
 
