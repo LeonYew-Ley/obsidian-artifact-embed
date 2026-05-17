@@ -10,6 +10,7 @@ build/
 .idea/
 .DS_Store
 Thumbs.db
+.claude/
 
 # Obsidian-side per-vault data (would leak vault state if accidentally committed)
 data.json

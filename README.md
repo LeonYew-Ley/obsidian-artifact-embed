@@ -14,6 +14,14 @@
 
 **Artifact Embed** lets you drop interactive HTML — local files, remote URLs, or inline source — straight into your Obsidian notes as Claude-Desktop-style cards. Each artifact runs in a sandboxed iframe, inherits your Obsidian theme variables, and gives you a tiny toolbar to reload, open externally, or copy the source.
 
+## Demo
+
+<p align="center">
+  <video src="docs/demo.webm" controls width="720" muted playsinline></video>
+</p>
+
+> If the inline player doesn't load in your Markdown renderer, [download / open `docs/demo.webm`](docs/demo.webm) directly.
+
 ## Why?
 
 Plain Obsidian only renders Markdown. If you want a tabbed cheatsheet, a chart widget, or a self-contained mini-tool inside a note, your choices are: (a) paste raw HTML and pollute the note's global CSS, (b) launch a dedicated HTML viewer in a separate tab, or (c) iframe a URL into a sidebar pane. None of these put a polished, sandboxed, theme-aware artifact card *inline* next to your prose. That's what this plugin does.

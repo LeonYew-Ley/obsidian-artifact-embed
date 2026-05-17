@@ -14,6 +14,14 @@
 
 **Artifact Embed** 让你把交互式 HTML —— 不论是本地文件、远程 URL 还是直接内联的源码 —— 像 Claude Desktop 的 artifact 卡片那样直接落到 Obsidian 笔记里。每个 artifact 都跑在 sandbox 化的 iframe 中，会继承你当前 Obsidian 主题的 CSS 变量，还自带一个小工具栏，可以重新加载、外部打开、复制源码。
 
+## 效果演示
+
+<p align="center">
+  <video src="docs/demo.webm" controls width="720" muted playsinline></video>
+</p>
+
+> 如果你的 Markdown 渲染器不支持内联视频，可以[直接打开 / 下载 `docs/demo.webm`](docs/demo.webm)。
+
 ## 为什么需要这个？
 
 原生 Obsidian 只渲染 Markdown。如果你想在笔记里嵌入一份带标签页的速查表、一个图表组件、或者一个独立的小工具，你的选择无非是：(a) 把原始 HTML 贴进笔记从而污染全局 CSS、(b) 单开一个 HTML viewer 标签页、(c) 用 iframe 把 URL 塞进侧栏。这几种方式都没法把一个精致、隔离、又能继承主题的 artifact 卡片**就地**放在正文旁边。这就是这个插件要做的事。
