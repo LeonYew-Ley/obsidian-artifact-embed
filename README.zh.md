@@ -17,10 +17,8 @@
 ## 效果演示
 
 <p align="center">
-  <video src="docs/demo.webm" controls width="720" muted playsinline></video>
+  <video src="https://github.com/user-attachments/assets/e3fc8ccf-a3d7-4208-870c-3954182ee4b1" controls width="720" muted playsinline></video>
 </p>
-
-> 如果你的 Markdown 渲染器不支持内联视频，可以[直接打开 / 下载 `docs/demo.webm`](docs/demo.webm)。
 
 ## 为什么需要这个？
 

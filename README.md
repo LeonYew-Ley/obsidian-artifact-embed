@@ -17,10 +17,8 @@
 ## Demo
 
 <p align="center">
-  <video src="docs/demo.webm" controls width="720" muted playsinline></video>
+  <video src="https://github.com/user-attachments/assets/e3fc8ccf-a3d7-4208-870c-3954182ee4b1" controls width="720" muted playsinline></video>
 </p>
-
-> If the inline player doesn't load in your Markdown renderer, [download / open `docs/demo.webm`](docs/demo.webm) directly.
 
 ## Why?
 
