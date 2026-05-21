@@ -1,7 +1,7 @@
 {
   "id": "artifact-embed",
   "name": "Artifact Embed",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "minAppVersion": "1.4.0",
   "description": "Embed interactive HTML files, URLs, or inline HTML as Claude-style sandboxed artifact cards inside notes.",
   "author": "LeonYew-Ley",
