@@ -31,6 +31,45 @@ const ICONS = {
 // Theme bridge — collect Obsidian CSS variables for iframe injection
 // ============================================================
 
+// Prefixes of Obsidian CSS variables worth forwarding into the iframe.
+// Scanning the body's computed style by prefix is far cheaper than walking
+// document.styleSheets, which can have tens of thousands of rules once a
+// theme + snippets + other plugins are loaded.
+const THEME_VAR_PREFIXES = [
+  '--background-',
+  '--text-',
+  '--font-',
+  '--interactive-',
+  '--color-',
+  '--accent',
+  '--link-',
+  '--border-',
+  '--divider-',
+  '--code-',
+  '--blockquote-',
+  '--tag-',
+  '--list-',
+  '--table-',
+  '--icon-',
+  '--scrollbar-',
+  '--input-',
+  '--checkbox-',
+  '--radio-',
+  '--toggle-',
+  '--shadow-',
+  '--radius-',
+  '--size-',
+  '--line-height-',
+  '--bold-',
+  '--italic-',
+  '--h1-',
+  '--h2-',
+  '--h3-',
+  '--h4-',
+  '--h5-',
+  '--h6-',
+];
+
 class ThemeBridge {
   constructor() {
     this._cachedCss = null;
@@ -47,26 +86,17 @@ class ThemeBridge {
   }
 
   _build() {
-    const names = new Set();
-    for (const sheet of Array.from(document.styleSheets)) {
-      let rules;
-      try {
-        rules = sheet.cssRules;
-      } catch (e) {
-        continue; // cross-origin or restricted
-      }
-      if (!rules) continue;
-      this._collectNamesFromRules(rules, names);
-    }
-
     const bodyStyle = getComputedStyle(document.body);
     const decls = [];
-    names.forEach((name) => {
+    for (let i = 0; i < bodyStyle.length; i++) {
+      const name = bodyStyle[i];
+      if (!name || name.charCodeAt(0) !== 45 /* '-' */) continue;
+      if (!name.startsWith('--')) continue;
+      if (!this._isRelevant(name)) continue;
       const value = bodyStyle.getPropertyValue(name).trim();
       if (value) decls.push(`${name}: ${value};`);
-    });
+    }
 
-    // Mirror color-scheme so iframe's default form controls / scrollbars match.
     const isDark = document.body.classList.contains('theme-dark');
     const colorScheme = isDark ? 'dark' : 'light';
 
@@ -87,17 +117,11 @@ html, body {
 </style>`;
   }
 
-  _collectNamesFromRules(rules, out) {
-    for (const rule of Array.from(rules)) {
-      if (rule.style) {
-        for (let i = 0; i < rule.style.length; i++) {
-          const name = rule.style[i];
-          if (name && name.startsWith('--')) out.add(name);
-        }
-      }
-      // recurse into @media / @supports
-      if (rule.cssRules) this._collectNamesFromRules(rule.cssRules, out);
+  _isRelevant(name) {
+    for (const prefix of THEME_VAR_PREFIXES) {
+      if (name.startsWith(prefix)) return true;
     }
+    return false;
   }
 }
 
@@ -132,8 +156,6 @@ function looksLikeHtmlPath(s) {
   return /\.html?$/i.test(s);
 }
 
-// Decide whether the trimmed first line is a directive line (key=val pairs)
-// rather than a path / URL / HTML.
 function isDirectiveLine(line) {
   const t = line.trim();
   if (!t) return false;
@@ -195,10 +217,9 @@ class ArtifactCard {
     this.plugin = plugin;
     this._iframe = null;
     this._currentSrcdoc = '';
-    this._currentUrl = '';
   }
 
-  async render() {
+  render() {
     const { container } = this;
     container.empty();
     container.addClass('artifact-card');
@@ -229,11 +250,10 @@ class ArtifactCard {
     const iframe = body.createEl('iframe', { cls: 'artifact-iframe' });
     iframe.setAttribute('sandbox', SANDBOX_FLAGS);
     iframe.setAttribute('referrerpolicy', 'no-referrer');
-    iframe.setAttribute('loading', 'lazy');
     iframe.style.height = `${this._resolvedHeight()}px`;
     this._iframe = iframe;
 
-    await this._load();
+    this._load();
   }
 
   _addAction(parent, svg, label, handler) {
@@ -264,8 +284,18 @@ class ArtifactCard {
 
   async _load() {
     try {
+      if (!this._iframe) return;
+
+      // Obsidian sometimes invokes the markdown processor before the el is
+      // attached to the live editor DOM. Setting srcdoc on a detached iframe
+      // can leave it blank until something forces a re-layout. Wait until
+      // the iframe is connected before loading.
+      if (!this._iframe.isConnected) {
+        this._waitForConnect();
+        return;
+      }
+
       if (this.source.kind === 'url') {
-        this._currentUrl = this.source.url;
         this._iframe.removeAttribute('srcdoc');
         this._iframe.setAttribute('src', this.source.url);
         return;
@@ -280,12 +310,32 @@ class ArtifactCard {
 
       const themeCss = this.plugin.themeBridge.getCss();
       const finalHtml = injectThemeCss(rawHtml, themeCss);
-      this._currentSrcdoc = finalHtml;
-      this._iframe.removeAttribute('src');
-      this._iframe.setAttribute('srcdoc', finalHtml);
+      // Setting srcdoc always triggers a full iframe document reparse —
+      // skip if the content is byte-identical.
+      if (finalHtml !== this._currentSrcdoc) {
+        this._currentSrcdoc = finalHtml;
+        this._iframe.removeAttribute('src');
+        this._iframe.setAttribute('srcdoc', finalHtml);
+      }
     } catch (err) {
       this._showError(err);
     }
+  }
+
+  _waitForConnect() {
+    // Cap retries at ~1s so we never spin forever if the el is discarded.
+    const MAX_FRAMES = 60;
+    let frames = 0;
+    const tick = () => {
+      if (!this._iframe) return;
+      if (this._iframe.isConnected) {
+        this._load();
+        return;
+      }
+      if (++frames > MAX_FRAMES) return;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   }
 
   _showError(err) {
@@ -299,7 +349,8 @@ class ArtifactCard {
 
   _reload() {
     if (!this._iframe) return;
-    // Re-fetch (file content may have changed) and rebuild with fresh theme vars.
+    // Force re-assignment even if content matches.
+    this._currentSrcdoc = '';
     this._load();
   }
 
@@ -309,7 +360,6 @@ class ArtifactCard {
       return;
     }
     if (this.source.kind === 'file') {
-      // Resolve to a file:// URL via the Vault adapter.
       const adapter = this.plugin.app.vault.adapter;
       if (typeof adapter.getResourcePath === 'function') {
         const url = adapter.getResourcePath(this.source.file.path);
@@ -336,7 +386,7 @@ class ArtifactCard {
 }
 
 // Inject Obsidian theme variables into an HTML document. If the HTML has a
-// <head>, splice in after the opening tag; otherwise prepend.
+// <head>, splice in after the opening tag; otherwise wrap into a full doc.
 function injectThemeCss(html, themeCss) {
   if (!html) return themeCss;
   const headMatch = /<head[^>]*>/i.exec(html);
@@ -344,7 +394,6 @@ function injectThemeCss(html, themeCss) {
     const at = headMatch.index + headMatch[0].length;
     return html.slice(0, at) + themeCss + html.slice(at);
   }
-  // No <head>: wrap fragment into a full document.
   return `<!doctype html><html><head>${themeCss}</head><body>${html}</body></html>`;
 }
 
@@ -352,25 +401,97 @@ function injectThemeCss(html, themeCss) {
 // Plugin
 // ============================================================
 
+// Lazy-loaded ensureSyntaxTree from @codemirror/language. Obsidian bundles
+// CM6 internally and exposes it via require; we resolve once and cache.
+let _ensureSyntaxTree = null;
+let _ensureSyntaxTreeTried = false;
+function getEnsureSyntaxTree() {
+  if (_ensureSyntaxTreeTried) return _ensureSyntaxTree;
+  _ensureSyntaxTreeTried = true;
+  try {
+    const mod = require('@codemirror/language');
+    if (mod && typeof mod.ensureSyntaxTree === 'function') {
+      _ensureSyntaxTree = mod.ensureSyntaxTree;
+    }
+  } catch (e) {
+    // Module not exposed; nothing we can do.
+  }
+  return _ensureSyntaxTree;
+}
+
 class ArtifactEmbedPlugin extends obsidian.Plugin {
   async onload() {
     this.themeBridge = new ThemeBridge();
 
-    // Invalidate theme cache when Obsidian's CSS changes (theme switch, snippet edits).
+    // Invalidate theme cache when Obsidian's CSS changes.
     this.registerEvent(
       this.app.workspace.on('css-change', () => {
         this.themeBridge.invalidate();
       }),
     );
 
-    // Single entry point: ```artifact code block.
-    // Body is classified to one of: path / url / inline HTML.
+    // Workaround for a CM6 lazy-parsing quirk.
+    //
+    // `registerMarkdownCodeBlockProcessor` is only invoked for a block once
+    // CM6's incremental syntax parser has reached the block's closing fence.
+    // For tall artifact blocks that span more than the initial viewport
+    // (common — these are usually full-page HTML widgets), CM6 may parse
+    // only the first few lines on file-open and never reach the closing
+    // fence, so the processor is never called and the iframe is never
+    // rendered — until the user manually scrolls to the bottom.
+    //
+    // See: https://forum.obsidian.md/t/long-markdown-code-block-not-fully-loaded-in-live-preview/50647
+    //
+    // Fix: on file-open, force CM6 to parse the entire document via
+    // `ensureSyntaxTree(state, doc.length, ...)`. CM6 then discovers the
+    // closing fence, schedules the post-processor, and our render path
+    // proceeds normally.
+    this.registerEvent(
+      this.app.workspace.on('file-open', () => this._scheduleFullParse()),
+    );
+
     this.registerMarkdownCodeBlockProcessor('artifact', (source, el, ctx) =>
       this._processCodeBlock(source, el, ctx),
     );
   }
 
+  _scheduleFullParse() {
+    // file-open fires before the editor is mounted and the doc is loaded,
+    // so we try at two delays. Each attempt short-circuits if the widget
+    // is already rendered, so the second call is a near-no-op in the
+    // common case.
+    setTimeout(() => this._forceFullParse(), 100);
+    setTimeout(() => this._forceFullParse(), 500);
+  }
+
+  _forceFullParse() {
+    const view = this.app.workspace.getActiveViewOfType(obsidian.MarkdownView);
+    if (!view || !view.editor) return;
+    const cm = view.editor.cm;
+    if (!cm) return;
+    if (cm.state.doc.length === 0) return;
+    // Already rendered — nothing to do.
+    if (view.contentEl.querySelector('.cm-lang-artifact .artifact-iframe')) return;
+    // No artifact block in this doc — nothing to do.
+    if (!/^```artifact\b/m.test(cm.state.doc.toString())) return;
+
+    const ensureSyntaxTree = getEnsureSyntaxTree();
+    if (!ensureSyntaxTree) return;
+    ensureSyntaxTree(cm.state, cm.state.doc.length, 2000);
+    // Bump CM6 to re-decorate against the now-complete syntax tree.
+    cm.dispatch({ selection: cm.state.selection });
+  }
+
   _processCodeBlock(source, el, ctx) {
+    // If Obsidian re-invokes the processor on the same element with an
+    // identical block (cursor moving in/out of the block in Live Preview,
+    // view re-paints), skip the rebuild.
+    const sig = `${ctx.sourcePath || ''}::${source}`;
+    if (el.dataset.artifactSig === sig && el.querySelector('.artifact-iframe')) {
+      return;
+    }
+    el.dataset.artifactSig = sig;
+
     const { directives, body } = parseArtifactBlock(source);
     const classified = classifyBody(body);
 
