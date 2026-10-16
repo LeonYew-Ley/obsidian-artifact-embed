@@ -171,16 +171,6 @@ iframe 用 `allow-scripts allow-forms allow-popups allow-modals` 的 sandbox 配
 
 参考 [`examples/test-note.md`](examples/test-note.md) —— 放进任意 vault 即可验证三种语法都能正常渲染。
 
-## Banner 致谢
-
-Banner 是手写的 SVG（`docs/banner.svg`），不依赖任何外部工具。想自己做插件 banner 的话，常见的免费方案包括：
-
-- **[Figma](https://www.figma.com/)** —— 最主流，有免费层，导出 PNG/SVG 方便
-- **[Penpot](https://penpot.app/)** —— 完全开源的 Figma 替代品
-- **[Canva](https://www.canva.com/)** —— 模板驱动，非设计师起步最快
-- **[Excalidraw](https://excalidraw.com/)** —— 手绘风，Obsidian 里也有同名插件
-- **[Satori](https://github.com/vercel/satori)** —— 用 JSX 程序化生成 banner（FOSS，Vercel 出品）
-
 ## 赞助支持
 
 如果这个插件对你有帮助，欢迎支持开发：

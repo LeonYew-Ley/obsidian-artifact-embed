@@ -171,16 +171,6 @@ If you ever need that kind of access, you almost certainly want a different plug
 
 See [`examples/test-note.md`](examples/test-note.md) — drop it into a vault to verify all three syntaxes render correctly.
 
-## Banner credit
-
-The banner is hand-written SVG (`docs/banner.svg`) — no external tooling needed. If you want to make your own plugin banner, popular free options include:
-
-- **[Figma](https://www.figma.com/)** — most common, free tier, great export to PNG/SVG
-- **[Penpot](https://penpot.app/)** — fully open-source Figma alternative
-- **[Canva](https://www.canva.com/)** — template-driven, fastest for non-designers
-- **[Excalidraw](https://excalidraw.com/)** — sketchy aesthetic, also exists as an Obsidian plugin
-- **[Satori](https://github.com/vercel/satori)** — generate banners from JSX, programmatically (FOSS, by Vercel)
-
 ## Support
 
 If this plugin helps you, you can support its development:
