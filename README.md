@@ -181,6 +181,16 @@ The banner is hand-written SVG (`docs/banner.svg`) — no external tooling neede
 - **[Excalidraw](https://excalidraw.com/)** — sketchy aesthetic, also exists as an Obsidian plugin
 - **[Satori](https://github.com/vercel/satori)** — generate banners from JSX, programmatically (FOSS, by Vercel)
 
+## Support
+
+If this plugin helps you, you can support its development:
+
+<a href="https://ko-fi.com/leonyew"><img alt="Ko-fi" src="https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white"></a>
+<a href="https://afdian.com/a/leonyew"><img alt="爱发电" src="https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-Afdian-946CE6"></a>
+
+- [Ko-fi](https://ko-fi.com/leonyew) (international)
+- [爱发电 Afdian](https://afdian.com/a/leonyew) (mainland China)
+
 ## License
 
 [MIT](LICENSE) © LeonYew-Ley

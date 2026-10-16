@@ -181,6 +181,16 @@ Banner 是手写的 SVG（`docs/banner.svg`），不依赖任何外部工具。�
 - **[Excalidraw](https://excalidraw.com/)** —— 手绘风，Obsidian 里也有同名插件
 - **[Satori](https://github.com/vercel/satori)** —— 用 JSX 程序化生成 banner（FOSS，Vercel 出品）
 
+## 赞助支持
+
+如果这个插件对你有帮助，欢迎支持开发：
+
+<a href="https://ko-fi.com/leonyew"><img alt="Ko-fi" src="https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white"></a>
+<a href="https://afdian.com/a/leonyew"><img alt="爱发电" src="https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-Afdian-946CE6"></a>
+
+- [爱发电](https://afdian.com/a/leonyew)（国内推荐）
+- [Ko-fi](https://ko-fi.com/leonyew)（海外 / PayPal）
+
 ## 许可
 
 [MIT](LICENSE) © LeonYew-Ley
