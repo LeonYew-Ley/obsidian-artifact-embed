@@ -6,6 +6,8 @@
   <a href="https://obsidian.md/"><img alt="Obsidian" src="https://img.shields.io/badge/Obsidian-1.4%2B-7C3AED?logo=obsidian&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <img alt="Status" src="https://img.shields.io/badge/status-alpha-orange.svg">
+  <a href="https://ko-fi.com/leonyew"><img alt="Ko-fi" src="https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white"></a>
+  <a href="https://afdian.com/a/leonyew"><img alt="爱发电" src="https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-%E6%94%AF%E6%8C%81-946CE6"></a>
 </p>
 
 <p align="center">
